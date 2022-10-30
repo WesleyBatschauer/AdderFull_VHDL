@@ -1,5 +1,4 @@
-DESING
--- Adder_Full
+--ADDER FULL
 library IEEE;
 use IEEE.std_logic_1164.all;
 
@@ -19,4 +18,45 @@ begin
     o_s <= i_a xor i_b xor i_cin;
     o_cout <= (i_a and i_b) or (i_a and i_cin) or (i_b and i_cin);
   end process;
+end arch;
+
+------------------------------------------------------------------------
+
+--ADDER 4 BITS
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity adderFull_4bit is
+port(
+  i_a: in std_logic_vector(3 downto 0);
+  i_b: in std_logic_vector(3 downto 0);
+  i_cin: in std_logic;
+  o_s: out std_logic_vector(3 downto 0);
+  o_cout: out std_logic);
+end adderFull_4bit;
+
+architecture arch of adderFull_4bit is
+	-- Components declaration
+    component adder_full is
+    port(
+  	i_a: in std_logic;
+  	i_b: in std_logic;
+  	i_cin: in std_logic;
+  	o_s: out std_logic;
+  	o_cout: out std_logic);
+	end component;
+    
+    signal w_cout_01 : std_logic; -- internal wire
+    signal w_cout_02 : std_logic; -- internal wire
+    signal w_cout_03 : std_logic; -- internal wire
+    
+    
+    begin
+    
+    -- Components instantiation
+    u_ADDER_01	: adder_full port map (i_a(0), i_b(0), i_cin, o_s(0),  w_cout_01);
+    u_ADDER_02	: adder_full port map (i_a(1), i_b(1), w_cout_01, o_s(1), w_cout_02);
+    u_ADDER_03	: adder_full port map (i_a(2), i_b(2), w_cout_02, o_s(2), w_cout_03);
+    u_ADDER_04	: adder_full port map (i_a(3), i_b(3), w_cout_03, o_s(3), o_cout);
+    
 end arch;
