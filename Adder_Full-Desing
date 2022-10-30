@@ -60,3 +60,50 @@ architecture arch of adderFull_4bit is
     u_ADDER_04	: adder_full port map (i_a(3), i_b(3), w_cout_03, o_s(3), o_cout);
     
 end arch;
+
+-----------------------------------------------------------------------
+
+--SUBTRACTOR
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity subtractor_4bits is
+port(
+  i_a: in std_logic_vector(3 downto 0);
+  i_b: in std_logic_vector(3 downto 0);
+  i_cin: in std_logic;
+  o_cin: out std_logic;
+  o_s: out std_logic_vector(3 downto 0);
+  o_b: out std_logic_vector(3 downto 0);
+  o_cout: out std_logic);
+end subtractor_4bits;
+
+architecture arch of subtractor_4bits is
+	-- Components declaration
+    component adder_full is
+    port(
+  	i_a: in std_logic;
+  	i_b: in std_logic;
+  	i_cin: in std_logic;
+  	o_s: out std_logic;
+  	o_cout: out std_logic);
+	end component;
+    
+    signal w_cout_01 : std_logic; -- internal wire
+    signal w_cout_02 : std_logic; -- internal wire
+    signal w_cout_03 : std_logic; -- internal wire
+    
+    
+    begin
+    	process(i_b, i_cin)is
+    	begin
+    	o_b <= not i_b;
+        o_cin <= '1';
+        end process;
+    
+    -- Components instantiation
+    u_SUBTRACTOR_01	: adder_full port map (i_a(0), o_b(0), o_cin, o_s(0),  w_cout_01);
+    u_SUBTRACTOR_02	: adder_full port map (i_a(1), o_b(1), w_cout_01, o_s(1), w_cout_02);
+	u_SUBTRACTOR_03 : adder_full port map (i_a(2), o_b(2), w_cout_02, o_s(2), w_cout_03);
+    u_SUBTRACTOR_04	: adder_full port map (i_a(3), o_b(3), w_cout_03, o_s(3), o_cout);
+end arch;
